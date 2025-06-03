@@ -64,9 +64,6 @@ class TestLoginAndRegistration:
         assert account_name_input.get_attribute("value") == name_data
         assert account_login_input.get_attribute("value") == email_data
 
-        logout_button = wait.until(EC.element_to_be_clickable(account_locators.logout_button))
-        logout_button.click()
-
 
 #Проверка регистрации: ошибка для некорректного пароля
     def test_invalid_password_registration(self, create_driver):
@@ -171,22 +168,50 @@ class TestLoginAndRegistration:
 
 #Проверка входа: вход через кнопку в форме восстановления пароля
     def test_login_from_password_restore_page(self, create_driver):
-        """Test login from password restore page"""
+        driver = create_driver
         wait = WebDriverWait(driver, 10)
-        user = UserData()
 
-        driver.get("https://stellarburgers.nomoreparties.site/login")
+        driver.get("https://stellarburgers.nomoreparties.site/")
 
-        driver.find_element(*LoginPageLocators.restore_password_link).click()
+        login_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти в аккаунт']"))
+        )
+        login_button.click()
 
-        wait.until(EC.visibility_of_element_located(RegistrationPageLocators.login_link)).click()
+        recovery_link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.LINK_TEXT, "Восстановить пароль"))
+        )
+        recovery_link.click()
 
-        wait.until(EC.visibility_of_element_located(LoginPageLocators.email_input)).send_keys(user.email)
-        driver.find_element(*LoginPageLocators.password_input).send_keys(user.password)
-        driver.find_element(*LoginPageLocators.login_button).click()
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h2[text()='Восстановление пароля']"))
+        )
 
-        wait.until(EC.visibility_of_element_located(HomePageLocators.account_link))
+        login_link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.LINK_TEXT, "Войти"))
+        )
+        login_link.click()
 
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h2[text()='Вход']"))
+        )
+
+        email_data = DataHelper.generate_login()
+        password_data = DataHelper.generate_password()
+
+        email_input = wait.until(EC.visibility_of_element_located(registration_locators.email_input))
+        password_input = wait.until(EC.visibility_of_element_located(registration_locators.password_input))
+
+        email_input.send_keys(email_data)
+        password_input.send_keys(password_data)
+
+        submit_button = driver.find_element(By.XPATH, "//button[text()='Войти']")
+        submit_button.click()
+
+        # Проверяем успешный вход по наличию кнопки "Оформить заказ"
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
+        )
 
 #Проверка выхода из аккаунта:
     def test_logout(self, create_driver):

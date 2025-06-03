@@ -1,2 +1,13 @@
 .idea
 .venv
+__pycache__
+__init__.cpython-313
+data_helpers.cpython-313
+__pycache__
+__init__.cpython-313
+all_locators.cpython-313
+__pycache__
+__init__.cpython-313
+test_data.cpython-313-pytest-8.3.5
+.pytest_cache
+
