@@ -1,6 +1,6 @@
 .idea
 .venv
-__pycache__
+./*/__pycache__
 __init__.cpython-313
 data_helpers.cpython-313
 __pycache__

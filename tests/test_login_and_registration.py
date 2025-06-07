@@ -174,26 +174,26 @@ class TestLoginAndRegistration:
         driver.get("https://stellarburgers.nomoreparties.site/")
 
         login_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[text()='Войти в аккаунт']"))
+            EC.element_to_be_clickable(HomePageLocators.login_account_button))
         )
         login_button.click()
 
         recovery_link = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.LINK_TEXT, "Восстановить пароль"))
+            EC.element_to_be_clickable(LoginPageLocators.restore_password_link))
         )
         recovery_link.click()
 
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[text()='Восстановление пароля']"))
+            EC.presence_of_element_located(LoginPageLocators.password_recovery_link)
         )
 
         login_link = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.LINK_TEXT, "Войти"))
+            EC.element_to_be_clickable(LoginPageLocators.login_link)
         )
         login_link.click()
 
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[text()='Вход']"))
+            EC.presence_of_element_located(LoginPageLocators.login_label)
         )
 
         email_data = DataHelper.generate_login()
@@ -205,13 +205,11 @@ class TestLoginAndRegistration:
         email_input.send_keys(email_data)
         password_input.send_keys(password_data)
 
-        submit_button = driver.find_element(By.XPATH, "//button[text()='Войти']")
+        submit_button = driver.find_element(LoginPageLocators.login_button)
         submit_button.click()
 
-        # Проверяем успешный вход по наличию кнопки "Оформить заказ"
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//button[text()='Оформить заказ']"))
-        )
+        wait.until(EC.visibility_of_element_located(HomePageLocators.account_link))
+        assert driver.current_url == "https://stellarburgers.nomoreparties.site/"
 
 #Проверка выхода из аккаунта:
     def test_logout(self, create_driver):

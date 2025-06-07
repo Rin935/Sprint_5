@@ -18,6 +18,8 @@ class LoginPageLocators:
     login_button = (By. XPATH, ".//button[text() = 'Войти']")
     registration_link = (By. XPATH, ".//a[href = 'register']")
     restore_password_link = (By. XPATH, ".//a[href = 'forgot-password']")
+    password_recovery_link = (By.XPATH, "//h2[text()='Восстановление пароля']")
+    login_link = (By.LINK_TEXT, "Войти")
 
 class RegistrationPageLocators:
     name_input = (By. XPATH, ".//label[text() = 'Имя']/following_sibling::input")
